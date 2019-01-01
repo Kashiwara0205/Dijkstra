@@ -1,0 +1,23 @@
+下記のコードは、無限を記録する架空の駅が出てくるので、改良することになり
+ソースから消すことになったが参考になるので、ここに残しておく
+
+(* メモ: fold_right  展開し終わった後の挙動(1回目):
+                      第一引数に最後に展開されたfirstの要素が入る( 最初に関数が適用される )
+                      第二引数に初期値が入る 
+                    ２回目:
+                      第一引数に展開されたfirstの要素が入る(最後から２番目に展開)
+                      第二引数に先ほどの、第一引数の要素が入る ....*)
+(* シグネチャ: dijkstra_station list -> dijkstra_station * dijkstra_station list *)
+(* 処理概要： d_station_list: ダイグストラアルゴリズムで使っている駅のリスト
+             確定している最短経路の駅と、それ以外の駅の分離をタプルとして返却*)
+let rec separation_shortest_distance_station d_station_list =
+  List.fold_right(fun first (second, other_station) ->
+    match (first, second) with
+    ({d_name = fn;  d_shortest_distance = fs; d_name_list = fnl},
+     {d_name = sn;  d_shortest_distance = ss; d_name_list = snl}) ->
+     if sn = "" then (first, other_station)
+     else if fs < ss then (first, second :: other_station)
+     else (second, first :: other_station))
+  d_station_list
+  ({d_name = "" ; d_shortest_distance = infinity; d_name_list = [] }, [])
+;;

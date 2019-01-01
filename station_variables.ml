@@ -1,8 +1,10 @@
 (* ekimei_t *)
-(* stationレコード name: 駅名
-                  kana: ひらがなになった駅名
-                  romaji: ローマ字になった駅名
-                  belonging_route: 所属路線 *)
+(*  station - 駅を表すレコード 
+    name - 駅名
+    kana - ひらがなになった駅名
+    romaji - ローマ字になった駅名
+    belonging_route - 所属路線 
+*)
 type station = {
   name   : string; 
   kana   : string; 
@@ -11,12 +13,13 @@ type station = {
 };;
 
 (* ekikan_t *)
-(* station_intervalレコード  
-    starting_point : 開始駅
-    end_point: 終了駅
-    via: 経由駅
-    distance: 距離  
-    time: 開始駅から終了駅に行くまでの時間 *)
+(*  station_interval - 駅間を表すレコード
+    starting_point - 開始駅
+    end_point - 終了駅
+    via - 経由駅
+    distance - 距離  
+    time - 開始駅から終了駅に行くまでの時間 
+*)
 type station_interval = {
   starting_point  : string;
   end_point       : string;
@@ -26,15 +29,34 @@ type station_interval = {
 };;
 
 (* eki_t *)
-(* dijkstra_station型 d_name: 駅名
-                      d_shortest_distance: その駅が持つ最短経路の距離
-                      d_name_list: その駅が、アルゴリズムが始まった時お開始駅から辿ってきた駅のリスト*)
+(*  dijkstra_station - ダイグストラアルゴリズム用の駅レコード
+    d_name - 駅名
+    d_shortest_distance - その駅が持つ最短経路の距離
+    d_name_list - その駅が、アルゴリズムが始まった時お開始駅から辿ってきた駅のリスト
+*)
 type dijkstra_station = {
   d_name      : string;
   d_shortest_distance  : float;
   d_name_list : string list;
 };;
 
+(* ekikan_tree_t *)
+(* station_tree - 駅をツリー構造にしたバリアント
+   Empty - 空を示す
+   Node - ２分木の枝
+     station_tree(左) - 自己参照
+     string - 駅名
+     (string * float)list - [("Bの駅名" * "AからBの距離"), ("Cの駅名" * "AからCの距離")]
+     station_tree(右) - 自己参照
+*)
+type station_tree =  
+  Empty | 
+  Node of station_tree  *
+          string * 
+          (string * float) list *
+          station_tree
+;;
+                              
 let all_station =
   [ 
     {name="代々木上原"; kana="よよぎうえはら"; romaji="yoyogiuehara"; belonging_route="千代田線"}; 
